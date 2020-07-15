@@ -1,7 +1,8 @@
-package com.mobile.countryapp
+package com.mobile.countryapp.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.mobile.countryapp.R
 
 class MainActivity : AppCompatActivity() {
 
