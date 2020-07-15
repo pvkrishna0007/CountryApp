@@ -7,34 +7,27 @@ import androidx.lifecycle.ViewModelProvider
 import com.mobile.countryapp.api.ApiHelper
 import com.mobile.countryapp.model.CountryModel
 import com.mobile.countryapp.utils.Resource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Call
 import retrofit2.Response
 
 class CountryViewModel(val apiHelper: ApiHelper) : ViewModel() {
 
-    private var isNetworkAvailable: Boolean = false
-    private val countryScope = CoroutineScope(Dispatchers.IO)
-    private var resultLiveData = MutableLiveData<Resource<CountryModel>>()
+    private var isNetworkAvailable: Boolean? = null
+    private var mResultLiveData = MutableLiveData<Resource<CountryModel>>()
 
-    fun getCountryResultLiveData(): LiveData<Resource<CountryModel>> = resultLiveData
-
-    init {
-        // Requested for getting the country results
-        fetchCountryResults()
-    }
+    fun getCountryResultLiveData(): LiveData<Resource<CountryModel>> = mResultLiveData
 
     /**
      *  fetching the country results from Rest api
      */
     fun fetchCountryResults() {
-        if (!isNetworkAvailable) {
-            resultLiveData.value = (Resource.error(null, "No network connectivity"))
+
+        if (!isNetworkAvailable!!) {
+            mResultLiveData.value = (Resource.error(null, "No network connectivity"))
             return
         }
 
-        resultLiveData.postValue(Resource.loading(null))
+        mResultLiveData.postValue(Resource.loading(null))
 
         apiHelper.getCountryData().enqueue(object : retrofit2.Callback<CountryModel> {
 
@@ -42,11 +35,11 @@ class CountryViewModel(val apiHelper: ApiHelper) : ViewModel() {
                 call: Call<CountryModel>,
                 response: Response<CountryModel>
             ) {
-                resultLiveData.value = (Resource.success(response.body()!!))
+                mResultLiveData.value = (Resource.success(response.body()!!))
             }
 
             override fun onFailure(call: Call<CountryModel>, t: Throwable) {
-                resultLiveData.value = (Resource.error(null, t.message ?: "Error in response"))
+                mResultLiveData.value = (Resource.error(null, t.message ?: "Error in response"))
             }
         })
     }
@@ -54,8 +47,14 @@ class CountryViewModel(val apiHelper: ApiHelper) : ViewModel() {
     /**
      *  setting the network state on connectivity changes
      */
-    fun setNetworkState(it: Boolean) {
-        isNetworkAvailable = it
+    fun setNetworkState(isOnline: Boolean) {
+
+        if (isNetworkAvailable == null) {
+            isNetworkAvailable = isOnline
+            fetchCountryResults()
+        } else {
+            isNetworkAvailable = isOnline
+        }
     }
 }
 

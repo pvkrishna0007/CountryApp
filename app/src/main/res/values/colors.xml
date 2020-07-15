@@ -7,4 +7,5 @@
     <color name="title_text_color">#AA6200EE</color>
     <color name="desc_text_color">#1C1313</color>
     <color name="image_background">#EEEEEE</color>
+    <color name="page_background">#DDDDDD</color>
 </resources>
