@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font_small">10dp</dimen>
+    <dimen name="font_medium">16sp</dimen>
+    <dimen name="font_normal">20sp</dimen>
+    <dimen name="font_large">24sp</dimen>
+
+    <dimen name="image_size">120dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+</resources>

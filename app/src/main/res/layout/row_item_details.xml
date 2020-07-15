@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_boarding_pass"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_10"
+    app:cardElevation="@dimen/dp_10"
+    app:cardCornerRadius="@dimen/dp_10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_20">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_text_color"
+            android:textSize="@dimen/font_normal"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="fsdafsdaf faf sdf adsf f asf asf adsf asfd asdf dsafd " />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:background="@color/image_background"
+            android:padding="@dimen/dp_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/desc_text_color"
+            android:textSize="@dimen/font_medium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/iv_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="fsafs dfsaf a sfd asf dsaf sd fsaf fafd a faf as fdsf  dsf sa dasd fdasf dsa dsfdfgdfg dfg  gdfsgsdgsdgs gsfsdsa fsad fasdf  asf sadfasdf as fads fa" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
