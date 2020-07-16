@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeViews() {
         // Initialized view model setup
         val api = RetrofitManager.getApiInterface()
-        val countryModelFactory = CountryModelFactory(ApiHelper(api))
+        val countryModelFactory = CountryModelFactory(application, ApiHelper(api))
         mCountryViewModel =
             ViewModelProviders.of(this, countryModelFactory).get(CountryViewModel::class.java)
 
@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
             mCountryViewModel.fetchCountryResults()
         }
 
+        // Observes network change
         mConnectionLiveData.observe(this, Observer {
             mCountryViewModel.setNetworkState(it!!)
         })

@@ -6,14 +6,6 @@ class MyIdlingResource {
     companion object {
         private val idlingResource = CountingIdlingResource("coroutines")
 
-        fun increment() {
-            idlingResource.increment()
-        }
-
-        fun decrement() {
-            idlingResource.decrement()
-        }
-
         fun getIdlingResource() = idlingResource
     }
 }

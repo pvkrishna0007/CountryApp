@@ -3,4 +3,6 @@
     <string name="swipe_to_refresh">Swipe to refresh</string>
     <string name="no_description">Description not available</string>
     <string name="no_title">No title</string>
+    <string name="error_response">Error in response</string>
+    <string name="no_network_connectivity">No network connectivity</string>
 </resources>

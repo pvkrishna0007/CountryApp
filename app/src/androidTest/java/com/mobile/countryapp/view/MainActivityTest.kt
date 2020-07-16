@@ -44,6 +44,26 @@ class MainActivityTest {
         IdlingRegistry.getInstance().unregister(MyIdlingResource.getIdlingResource())
     }
 
+    /**
+     *  Validating the screen UI when no network
+     */
+    @Test
+    fun testALoadingDataOnConnectivityNotAvailable() {
+        ConnectionLiveData.mNetworkStatusDisabledForTesting = true
+
+        homeRule.scenario.onActivity { activity ->
+            // Setting network state disabled
+            activity.mCountryViewModel.setNetworkState(false)
+        }
+
+        onView(withId(R.id.tv_message)).check(isVisible())
+        onView(withId(R.id.pb_loading)).check(isGone())
+        onView(withText(R.string.no_network_connectivity)).check(isVisible()) // Content check
+    }
+
+    /**
+     *  Validating the screen UI when network available. MUST REQUIRED INTERNET to pass testcase
+     */
     @Test
     fun testLoadingDataOnNetworkAvailability() {
 
@@ -55,20 +75,6 @@ class MainActivityTest {
         onView(withId(R.id.rv_country_data)).check(isVisible())
         onView(withId(R.id.tv_message)).check(isGone())
         onView(withId(R.id.pb_loading)).check(isGone())
-    }
-
-    @Test
-    fun testNetworkConnectivityNotAvailable() {
-        ConnectionLiveData.mNetworkStatusDisabledForTesting = true
-
-        homeRule.scenario.onActivity { activity ->
-            // Setting network state disabled
-            activity.mCountryViewModel.setNetworkState(false)
-        }
-
-        onView(withId(R.id.tv_message)).check(isVisible())
-        onView(withId(R.id.pb_loading)).check(isGone())
-        onView(withText("No network connectivity")).check(isVisible()) // Content check
     }
 
 }
