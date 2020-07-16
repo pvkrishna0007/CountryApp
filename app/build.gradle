@@ -36,7 +36,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     /* Retrofit Networking library */
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
@@ -60,7 +60,15 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:4.2'
+
+    /* UI test dependencies */
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1"
+
+    /* Idling Resource for App*/
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
 }

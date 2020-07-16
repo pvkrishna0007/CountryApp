@@ -1,6 +1,7 @@
 package com.mobile.countryapp.view
 
 import android.os.Bundle
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -8,6 +9,7 @@ import com.mobile.countryapp.R
 import com.mobile.countryapp.api.ApiHelper
 import com.mobile.countryapp.api.RetrofitManager
 import com.mobile.countryapp.utils.ConnectionLiveData
+import com.mobile.countryapp.utils.MyIdlingResource
 import com.mobile.countryapp.utils.Status
 import com.mobile.countryapp.utils.visibleGone
 import com.mobile.countryapp.viewmodel.CountryModelFactory
@@ -20,7 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mItemAdapter: ItemDetailAdapter
     private lateinit var mConnectionLiveData: ConnectionLiveData
-    private lateinit var mCountryViewModel: CountryViewModel
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    lateinit var mCountryViewModel: CountryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         // Added network connectivity change observer
         mConnectionLiveData = ConnectionLiveData(this)
+
     }
 
     private fun initializeListeners() {
@@ -54,15 +58,18 @@ class MainActivity : AppCompatActivity() {
                     if (!swipe_container.isRefreshing) {
                         pb_loading.visibleGone(true) //Showing progress bar when swipe refresh was not visible
                     }
+                    rv_country_data.visibleGone(false)
                 }
                 Status.SUCCESS -> {
                     // Hiding loaders and updated adapter
                     pb_loading.visibleGone(false)
                     swipe_container.isRefreshing = false
                     tv_message.visibleGone(false)
+                    rv_country_data.visibleGone(true)
                     mItemAdapter.setItemList(it.data?.rows)
 
                     title = it.data?.title // Setting the title here
+                    MyIdlingResource.getIdlingResource().decrement()
                 }
                 Status.ERROR -> {
                     // Hiding loaders and shown message on error
@@ -70,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                     swipe_container.isRefreshing = false
                     tv_message.visibleGone(true)
                     tv_message.text = it.message
+                    MyIdlingResource.getIdlingResource().decrement()
                 }
             }
         })

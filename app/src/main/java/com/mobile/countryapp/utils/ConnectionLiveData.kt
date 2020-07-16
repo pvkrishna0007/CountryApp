@@ -5,13 +5,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-class ConnectionLiveData(private val context: Context) : LiveData<Boolean>() {
+class ConnectionLiveData(private val context: Context) : MutableLiveData<Boolean>() {
+
+    companion object {
+        var mNetworkStatusDisabledForTesting: Boolean = false
+    }
 
     private val networkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            postValue(context.isConnected)
+            if (!mNetworkStatusDisabledForTesting) {
+                postValue(context.isConnected)
+            }
         }
     }
 
