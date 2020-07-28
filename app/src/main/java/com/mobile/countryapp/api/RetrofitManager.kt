@@ -3,37 +3,45 @@ package com.mobile.countryapp.api
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mobile.countryapp.BuildConfig
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitManager {
+@Module
+@InstallIn(ApplicationComponent::class)
+object RetrofitManagerModule {
     private const val BASE_URL = "https://dl.dropboxusercontent.com/"
 
     /**
      *  Created ApiInterface object
      */
-    fun getApiInterface(): ApiInterface {
-        return getRetrofitCustomClient().create(ApiInterface::class.java)
+    @Provides
+    fun provideApiInterface(retrofit: Retrofit): ApiInterface {
+        return retrofit.create(ApiInterface::class.java)
     }
 
     /**
      *  Object mapper for json parser
      */
-    private val objectMapper: ObjectMapper
-        get() {
-            val mapper = ObjectMapper()
-            mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            return mapper
+    @Provides
+    fun provideObjectMapper(): ObjectMapper {
+        return ObjectMapper().apply {
+            configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
+    }
 
     /**
      *  Created Retrofit client object
      */
-    private fun getRetrofitCustomClient(): Retrofit {
+    @Provides
+    fun providesRetrofitCustomClient(objectMapper: ObjectMapper): Retrofit {
         val okHttpBuilder = OkHttpClient.Builder()
 
         if (BuildConfig.DEBUG) {
@@ -48,10 +56,9 @@ object RetrofitManager {
         okHttpBuilder.readTimeout(180, TimeUnit.SECONDS)
         okHttpBuilder.writeTimeout((830 * 1000).toLong(), TimeUnit.MILLISECONDS)
 
-        val mapper = objectMapper
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(JacksonConverterFactory.create(mapper))
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(okHttpBuilder.build())
             .build()
     }

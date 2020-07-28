@@ -1,96 +1,26 @@
 package com.mobile.countryapp.view
 
 import android.os.Bundle
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.mobile.countryapp.R
-import com.mobile.countryapp.api.ApiHelper
-import com.mobile.countryapp.api.RetrofitManager
-import com.mobile.countryapp.utils.ConnectionLiveData
-import com.mobile.countryapp.utils.MyIdlingResource
-import com.mobile.countryapp.utils.Status
-import com.mobile.countryapp.utils.visibleGone
-import com.mobile.countryapp.viewmodel.CountryModelFactory
-import com.mobile.countryapp.viewmodel.CountryViewModel
-import com.poc.passenger.view.adapters.ItemDetailAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.mobile.countryapp.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var mItemAdapter: ItemDetailAdapter
-    private lateinit var mConnectionLiveData: ConnectionLiveData
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    lateinit var mCountryViewModel: CountryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initializeViews()
-        initializeListeners()
+        replaceFragment(DashboardFragment())
     }
 
-    private fun initializeViews() {
-        // Initialized view model setup
-        val api = RetrofitManager.getApiInterface()
-        val countryModelFactory = CountryModelFactory(application, ApiHelper(api))
-        mCountryViewModel =
-            ViewModelProviders.of(this, countryModelFactory).get(CountryViewModel::class.java)
-
-        // Added item details adapter to recycler view
-        mItemAdapter = ItemDetailAdapter()
-        rv_country_data.adapter = mItemAdapter
-
-        // Added network connectivity change observer
-        mConnectionLiveData = ConnectionLiveData(this)
-
+    private fun replaceFragment(fragment: BaseFragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment, null)
+            .commitNowAllowingStateLoss()
     }
 
-    private fun initializeListeners() {
-        // Added data change observer for country results
-        mCountryViewModel.getCountryResultLiveData().observe(this, Observer {
-            when (it.status) {
-                Status.LOADING -> {
-                    tv_message.visibleGone(false)
-                    if (!swipe_container.isRefreshing) {
-                        pb_loading.visibleGone(true) //Showing progress bar when swipe refresh was not visible
-                    }
-                    rv_country_data.visibleGone(false)
-                }
-                Status.SUCCESS -> {
-                    // Hiding loaders and updated adapter
-                    pb_loading.visibleGone(false)
-                    swipe_container.isRefreshing = false
-                    tv_message.visibleGone(false)
-                    rv_country_data.visibleGone(true)
-                    mItemAdapter.setItemList(it.data?.rows)
-
-                    title = it.data?.title // Setting the title here
-                    MyIdlingResource.getIdlingResource().decrement()
-                }
-                Status.ERROR -> {
-                    // Hiding loaders and shown message on error
-                    pb_loading.visibleGone(false)
-                    swipe_container.isRefreshing = false
-                    tv_message.visibleGone(true)
-                    tv_message.text = it.message
-                    MyIdlingResource.getIdlingResource().decrement()
-                }
-            }
-        })
-
-        swipe_container.setOnRefreshListener {
-            // Getting results on swipe to refresh
-            mItemAdapter.clearItemList()
-            mCountryViewModel.fetchCountryResults()
-        }
-
-        // Observes network change
-        mConnectionLiveData.observe(this, Observer {
-            mCountryViewModel.setNetworkState(it!!)
-        })
-    }
 }

@@ -4,15 +4,18 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.mobile.countryapp.R
 import com.mobile.countryapp.api.ApiHelper
 import com.mobile.countryapp.model.CountryModel
 import com.mobile.countryapp.utils.MyIdlingResource
 import com.mobile.countryapp.utils.Resource
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class CountryViewModel(private val application: Application, private val apiHelper: ApiHelper) :
+class CountryViewModel @Inject constructor(
+    private val application: Application,
+    private val apiHelper: ApiHelper
+) :
     ViewModel() {
 
     private var isNetworkAvailable: Boolean? = null
@@ -76,13 +79,5 @@ class CountryViewModel(private val application: Application, private val apiHelp
     override fun onCleared() {
         super.onCleared()
         mJob.cancel()
-    }
-}
-
-class CountryModelFactory(private val application: Application, private val apiHelper: ApiHelper) :
-    ViewModelProvider.AndroidViewModelFactory(application) {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return CountryViewModel(application, apiHelper) as T
     }
 }

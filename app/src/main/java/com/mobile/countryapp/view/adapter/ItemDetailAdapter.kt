@@ -1,4 +1,4 @@
-package com.poc.passenger.view.adapters
+package com.mobile.countryapp.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +8,9 @@ import com.mobile.countryapp.R
 import com.mobile.countryapp.model.Row
 import com.mobile.countryapp.utils.loadImage
 import kotlinx.android.synthetic.main.row_item_details.view.*
+import javax.inject.Inject
 
-class ItemDetailAdapter : RecyclerView.Adapter<ItemDetailHolder>() {
+class ItemDetailAdapter @Inject constructor() : RecyclerView.Adapter<ItemDetailHolder>() {
 
     private var mItemList: List<Row>? = null
 

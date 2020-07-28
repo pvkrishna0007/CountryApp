@@ -6,8 +6,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.qualifiers.ActivityContext
+import javax.inject.Inject
 
-class ConnectionLiveData(private val context: Context) : MutableLiveData<Boolean>() {
+class ConnectionLiveData @Inject constructor(@ActivityContext private val context: Context) :
+    MutableLiveData<Boolean>() {
 
     companion object {
         var mNetworkStatusDisabledForTesting: Boolean = false

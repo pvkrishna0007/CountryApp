@@ -1,51 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
     tools:context=".view.MainActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        tools:background="#E5B2B2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_country_data"
-            android:layout_width="match_parent"
-            android:padding="@dimen/dp_10"
-            tools:listitem="@layout/row_item_details"
-            tools:itemCount="10"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:clipToPadding="false"
-            android:layout_height="match_parent" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        android:layout_width="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tv_message"
-        android:layout_width="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/swipe_to_refresh"
-        android:textColor="@color/title_text_color"
-        android:textSize="@dimen/font_large"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="wrap_content" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

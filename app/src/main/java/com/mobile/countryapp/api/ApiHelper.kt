@@ -1,6 +1,8 @@
 package com.mobile.countryapp.api
 
-class ApiHelper(private val apiInterface: ApiInterface) {
+import javax.inject.Inject
+
+class ApiHelper @Inject constructor(private val apiInterface: ApiInterface) {
 
     suspend fun getCountryData() = apiInterface.getCountryData()
 
