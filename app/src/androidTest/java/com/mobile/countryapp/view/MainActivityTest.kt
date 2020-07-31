@@ -51,9 +51,9 @@ class MainActivityTest {
      */
     @Test
     fun testLoadingDataOnNetworkAvailability() {
-        onView(withId(R.id.rv_country_data)).check(isVisible())
-        onView(withId(R.id.tv_message)).check(isGone())
-        onView(withId(R.id.pb_loading)).check(isGone())
+        onView(withId(R.id.rv_country_data)).check(isVisible)
+        onView(withId(R.id.tv_message)).check(isGone)
+        onView(withId(R.id.pb_loading)).check(isGone)
     }
 
 }
