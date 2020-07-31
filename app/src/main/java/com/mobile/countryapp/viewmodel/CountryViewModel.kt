@@ -4,35 +4,44 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.mobile.countryapp.R
 import com.mobile.countryapp.api.ApiHelper
 import com.mobile.countryapp.model.CountryModel
-import com.mobile.countryapp.utils.MyIdlingResource
+import com.mobile.countryapp.utils.ConnectionLiveData
 import com.mobile.countryapp.utils.Resource
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
+@ActivityRetainedScoped
 class CountryViewModel @Inject constructor(
     private val application: Application,
-    private val apiHelper: ApiHelper
+    dispatcher: CoroutineDispatcher,
+    private val idlingResource: CountingIdlingResource? = null,
+    private val apiHelper: ApiHelper,
+    private val connectionLiveData: ConnectionLiveData
 ) :
     ViewModel() {
 
-    private var isNetworkAvailable: Boolean? = null
     private val mJob = Job()
-    private val mCountryScope = CoroutineScope(Dispatchers.IO + mJob)
+    private val mCountryScope = CoroutineScope(dispatcher + mJob)
     private var mResultLiveData = MutableLiveData<Resource<CountryModel>>()
 
     fun getCountryResultLiveData(): LiveData<Resource<CountryModel>> = mResultLiveData
+
+    init {
+        fetchCountryResults()
+    }
 
     /**
      *  getting the country results from Rest api
      */
     fun fetchCountryResults() {
-        MyIdlingResource.getIdlingResource().increment()
+        idlingResource?.increment()
 
         // checking the network availability
-        if (!isNetworkAvailable!!) {
+        if (connectionLiveData.value != true) {
             mResultLiveData.value =
                 Resource.error(null, application.getString(R.string.no_network_connectivity))
             return
@@ -41,16 +50,18 @@ class CountryViewModel @Inject constructor(
         mResultLiveData.value = (Resource.loading(null))
 
         // loading the country data in the IO thread
-        mCountryScope.launch(exceptionHandler) {
+        mCountryScope.launch {
             val response = apiHelper.getCountryData()
             // update the data in the Main thread
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    mResultLiveData.value = Resource.success(response.body()!!)
-                } else {
-                    mResultLiveData.value =
-                        Resource.error(null, application.getString(R.string.error_response))
-                }
+            if (response.isSuccessful) {
+                mResultLiveData.postValue(Resource.success(response.body()!!))
+            } else {
+                mResultLiveData.postValue(
+                    Resource.error(
+                        null,
+                        application.getString(R.string.error_response)
+                    )
+                )
             }
         }
     }
@@ -62,19 +73,6 @@ class CountryViewModel @Inject constructor(
         )
     }
 
-    /**
-     *  setting the network state on connectivity changes
-     *
-     */
-    fun setNetworkState(isOnline: Boolean) {
-
-        if (isNetworkAvailable == null) {
-            isNetworkAvailable = isOnline
-            fetchCountryResults() // Getting the results when network state available
-        } else {
-            isNetworkAvailable = isOnline
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobile.countryapp.R
 import com.mobile.countryapp.model.Row
 import com.mobile.countryapp.utils.loadImage
+import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.android.synthetic.main.row_item_details.view.*
 import javax.inject.Inject
 
+@FragmentScoped
 class ItemDetailAdapter @Inject constructor() : RecyclerView.Adapter<ItemDetailHolder>() {
 
     private var mItemList: List<Row>? = null

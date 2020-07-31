@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.mobile.countryapp.R
 import com.mobile.countryapp.base.BaseFragment
-import com.mobile.countryapp.utils.ConnectionLiveData
-import com.mobile.countryapp.utils.MyIdlingResource
 import com.mobile.countryapp.utils.Status
 import com.mobile.countryapp.utils.visibleGone
 import com.mobile.countryapp.view.adapter.ItemDetailAdapter
@@ -25,7 +24,7 @@ class DashboardFragment : BaseFragment() {
     @Inject
     lateinit var mItemAdapter: ItemDetailAdapter
     @Inject
-    lateinit var mConnectionLiveData: ConnectionLiveData
+    lateinit var idlingResource: CountingIdlingResource
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     @Inject
@@ -81,7 +80,7 @@ class DashboardFragment : BaseFragment() {
                     mItemAdapter.setItemList(it.data?.rows)
 
                     setTitle(it.data?.title) // Setting the title here
-                    MyIdlingResource.getIdlingResource().decrement()
+                    idlingResource.decrement()
                 }
                 Status.ERROR -> {
                     // Hiding loaders and shown message on error
@@ -89,7 +88,7 @@ class DashboardFragment : BaseFragment() {
                     swipe_container.isRefreshing = false
                     tv_message.visibleGone(true)
                     tv_message.text = it.message
-                    MyIdlingResource.getIdlingResource().decrement()
+                    idlingResource.decrement()
                 }
             }
         })
@@ -100,10 +99,6 @@ class DashboardFragment : BaseFragment() {
             mCountryViewModel.fetchCountryResults()
         }
 
-        // Observes network change
-        mConnectionLiveData.observe(viewLifecycleOwner, Observer {
-            mCountryViewModel.setNetworkState(it!!)
-        })
     }
 
     private fun setTitle(title: String?) {

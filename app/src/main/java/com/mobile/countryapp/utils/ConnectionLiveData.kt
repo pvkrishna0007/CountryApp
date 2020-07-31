@@ -6,21 +6,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.lifecycle.MutableLiveData
-import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
-class ConnectionLiveData @Inject constructor(@ActivityContext private val context: Context) :
+class ConnectionLiveData @Inject constructor(private val context: Context) :
     MutableLiveData<Boolean>() {
-
-    companion object {
-        var mNetworkStatusDisabledForTesting: Boolean = false
-    }
 
     private val networkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (!mNetworkStatusDisabledForTesting) {
-                postValue(context.isConnected)
-            }
+            postValue(context.isConnected)
         }
     }
 
