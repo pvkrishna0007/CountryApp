@@ -109,6 +109,9 @@ class CountryViewModelTest {
         )
 
         Assert.assertEquals(Status.ERROR, viewModel.getCountryResultLiveData().value?.status)
+
     }
 
 }
+
+// Command line build generation: https://stackoverflow.com/questions/18683022/how-to-get-code-coverage-using-android-studio
