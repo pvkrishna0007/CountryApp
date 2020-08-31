@@ -22,8 +22,8 @@ jobs:
     - name: Unit tests
       #run: bash ./gradlew test --stacktrace #which is for both debug and release build purpose
       run: bash ./gradlew testDebugUnitTes #only for debug build test cases
-    - name: Code coverage report
-      run: bash ./gradlew createDebugCoverageReport
+    #- name: Code coverage report
+      #run: bash ./gradlew createDebugCoverageReport #Need Device for UI test or use firebase test device setup here
 
   build:
     name: Generate APK
