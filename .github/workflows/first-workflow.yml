@@ -20,7 +20,8 @@ jobs:
       with:
         java-version: 1.8
     - name: Unit tests
-      run: bash ./gradlew test --stacktrace
+      #run: bash ./gradlew test --stacktrace #which is for both debug and release build purpose
+      run: bash ./gradlew testDebugUnitTes #only for debug build test cases
 
   build:
     name: Generate APK
