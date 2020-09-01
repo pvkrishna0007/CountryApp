@@ -80,7 +80,11 @@ class DashboardFragment : BaseFragment() {
                     mItemAdapter.setItemList(it.data?.rows)
 
                     setTitle(it.data?.title) // Setting the title here
-                    idlingResource.decrement()
+                    try {
+                        idlingResource.decrement()
+                    } catch (ex: Throwable) {
+                        ex.printStackTrace()
+                    }
                 }
                 Status.ERROR -> {
                     // Hiding loaders and shown message on error
@@ -88,7 +92,11 @@ class DashboardFragment : BaseFragment() {
                     swipe_container.isRefreshing = false
                     tv_message.visibleGone(true)
                     tv_message.text = it.message
-                    idlingResource.decrement()
+                    try {
+                        idlingResource.decrement()
+                    } catch (ex: Throwable) {
+                        ex.printStackTrace()
+                    }
                 }
             }
         })
